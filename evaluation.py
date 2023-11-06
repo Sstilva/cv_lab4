@@ -14,14 +14,13 @@ def get_metrics(enh_img: torch.Tensor, gt_img: torch.Tensor, device: str='cpu'):
             :gt_img: ground-truth изображения
             :device: cpu/cuda
     '''
-    batch_size = enh_img.shape[0]
     enh_img = enh_img.to(device)
     gt_img = gt_img.to(device)
     # PSNR
-    psnr = PSNR(data_range=batch_size).to(device)
+    psnr = PSNR().to(device)
     psnr_score = psnr(enh_img, gt_img).item()
     # SSIM
-    ms_ssim = SSIM(data_range=batch_size).to(device)
+    ms_ssim = SSIM().to(device)
     ssim_score = ms_ssim(enh_img, gt_img).item()
     # LILPS
     lpips = LPIPS('alex').to(device)
