@@ -14,13 +14,14 @@ def get_metrics(enh_img: torch.Tensor, gt_img: torch.Tensor, device: str='cpu'):
             :gt_img: ground-truth изображения
             :device: cpu/cuda
     '''
-    enh_img = enh_img.to(device)
-    gt_img = gt_img.to(device)
+    # значение каждого пикселя должно быть в интервале от 0.0 до 1.0
+    enh_img = enh_img.to(device)/255 if enh_img.max() > 1 else enh_img.to(device)
+    gt_img = gt_img.to(device)/255 if gt_img.max() > 1 else gt_img.to(device)
     # PSNR
-    psnr = PSNR().to(device)
+    psnr = PSNR(data_range=1.0).to(device)
     psnr_score = psnr(enh_img, gt_img).item()
     # SSIM
-    ms_ssim = SSIM().to(device)
+    ms_ssim = SSIM(data_range=1.0).to(device)
     ssim_score = ms_ssim(enh_img, gt_img).item()
     # LILPS
     lpips = LPIPS('alex').to(device)
